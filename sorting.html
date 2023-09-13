@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sorting Algorithms</title>
+</head>
+
+<body>
+    <script>
+        const unsortedArray = [64, 34, 25, 12, 22, 11, 90];
+        const sortedArray = selectionSort(unsortedArray);
+        const quick = quickSort(unsortedArray);
+        const recursiveInsertion = recursiveInsertionSort(unsortedArray);
+        const merges = mergeSort(unsortedArray);
+        const recursiveBubble = recursiveBubbleSort(unsortedArray);
+        const insertion = insertionSort(unsortedArray);
+        console.log("sorted array using selection sort",sortedArray);
+        console.log("sorted array using quickSort sort", quick);
+        console.log("sorted array using recursiveInsertionSort sort", recursiveInsertion);
+        console.log("sorted array using mergeSort sort", merges);
+        console.log("sorted array using recursiveBubbleSort sort", recursiveBubble);
+        console.log("sorted array using insertionSort sort", insertion);
+        document.body.innerHTML = `Sorted Array: ${sortedArray}`;
+
+        function selectionSort(arr) {
+            const n = arr.length;
+
+            for (let i = 0; i < n - 1; i++) {
+                let minIndex = i;
+                for (let j = i + 1; j < n; j++) {
+                    if (arr[j] < arr[minIndex]) {
+                        minIndex = j;
+                    }
+                }
+                if (minIndex !== i) {
+                    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+                }
+            }
+
+            return arr;
+        }
+        /***************** BUBBLE SORT *****************************************************************************/
+        function bubbleSort(arr) {
+            const n = arr.length;
+            let swapped;
+
+            do {
+                swapped = false;
+
+                for (let i = 0; i < n - 1; i++) {
+                    if (arr[i] > arr[i + 1]) {
+                        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                        swapped = true;
+                    }
+                }
+            } while (swapped);
+
+            return arr;
+        }
+        /***************** insertionSort *****************************************************************************/
+        function insertionSort(arr) {
+            const n = arr.length;
+
+            for (let i = 1; i < n; i++) {
+                let key = arr[i];
+                let j = i - 1;
+
+                while (j >= 0 && arr[j] > key) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+
+                arr[j + 1] = key;
+            }
+
+            return arr;
+        }
+        /***************** mergeSort *****************************************************************************/
+        function mergeSort(arr) {
+            if (arr.length <= 1) {
+                return arr;
+            }
+
+            const middle = Math.floor(arr.length / 2);
+            const left = arr.slice(0, middle);
+            const right = arr.slice(middle);
+
+            return merge(mergeSort(left), mergeSort(right));
+        }
+
+        function merge(left, right) {
+            let result = [];
+            let leftIndex = 0;
+            let rightIndex = 0;
+
+            while (leftIndex < left.length && rightIndex < right.length) {
+                if (left[leftIndex] < right[rightIndex]) {
+                    result.push(left[leftIndex]);
+                    leftIndex++;
+                } else {
+                    result.push(right[rightIndex]);
+                    rightIndex++;
+                }
+            }
+
+            return result.concat(left.slice(leftIndex), right.slice(rightIndex));
+        }
+        /****************recursiveBubbleSort *****************************************************************************/
+        function recursiveBubbleSort(arr, n = arr.length) {
+            if (n === 1) {
+                return arr;
+            }
+
+            for (let i = 0; i < n - 1; i++) {
+                if (arr[i] > arr[i + 1]) {
+                    [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                }
+            }
+
+            return recursiveBubbleSort(arr, n - 1);
+        }
+        /***************** recursiveInsertionSort *****************************************************************************/
+        function recursiveInsertionSort(arr, n = arr.length) {
+            if (n <= 1) {
+                return arr;
+            }
+
+            recursiveInsertionSort(arr, n - 1);
+
+            let lastElement = arr[n - 1];
+            let j = n - 2;
+
+            while (j >= 0 && arr[j] > lastElement) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+            arr[j + 1] = lastElement;
+
+            return arr;
+        }
+        /***************** quickSort *****************************************************************************/
+        function quickSort(arr) {
+            if (arr.length <= 1) {
+                return arr;
+            }
+
+            const pivot = arr[0];
+            const left = [];
+            const right = [];
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] < pivot) {
+                    left.push(arr[i]);
+                } else {
+                    right.push(arr[i]);
+                }
+            }
+
+            return [...quickSort(left), pivot, ...quickSort(right)];
+        }
+
+
+    </script>
+</body>
+
+</html>

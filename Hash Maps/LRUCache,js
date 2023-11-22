@@ -1,0 +1,98 @@
+// LRU Cache using Hash Table in javascript
+
+class LRUCache {
+    constructor(capacity) {
+        this.capacity = capacity;
+        this.cache = new Map();
+        this.order = new DoublyLinkedList();
+    }
+
+    get(key) {
+        if (this.cache.has(key)) {
+            // Move the accessed element to the front of the linked list (most recently used)
+            const node = this.cache.get(key);
+            this.order.moveToFront(node);
+            return node.value;
+        }
+
+        return -1; // Key not found
+    }
+
+    put(key, value) {
+        if (this.cache.has(key)) {
+            // If the key already exists, update the value and move the element to the front
+            const node = this.cache.get(key);
+            node.value = value;
+            this.order.moveToFront(node);
+        } else {
+            // If the cache is at its capacity, remove the least recently used element
+            if (this.cache.size === this.capacity) {
+                const leastRecentlyUsed = this.order.removeLast();
+                this.cache.delete(leastRecentlyUsed.key);
+            }
+
+            // Add the new element to the cache and the front of the linked list
+            const newNode = new DoublyLinkedListNode(key, value);
+            this.cache.set(key, newNode);
+            this.order.addToFront(newNode);
+        }
+    }
+}
+
+class DoublyLinkedListNode {
+    constructor(key, value) {
+        this.key = key;
+        this.value = value;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList {
+    constructor() {
+        this.head = new DoublyLinkedListNode(null, null);
+        this.tail = new DoublyLinkedListNode(null, null);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+    }
+
+    addToFront(node) {
+        // Add a node to the front of the linked list (most recently used)
+        node.next = this.head.next;
+        node.prev = this.head;
+        this.head.next.prev = node;
+        this.head.next = node;
+    }
+
+    moveToFront(node) {
+        // Move a node to the front of the linked list (most recently used)
+        this.remove(node);
+        this.addToFront(node);
+    }
+
+    removeLast() {
+        // Remove the last node from the linked list (least recently used)
+        const lastNode = this.tail.prev;
+        this.remove(lastNode);
+        return lastNode;
+    }
+
+    remove(node) {
+        // Remove a specific node from the linked list
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+}
+
+// Example usage:
+const lruCache = new LRUCache(2); // Capacity is set to 2
+
+lruCache.put(1, 1);
+lruCache.put(2, 2);
+console.log(lruCache.get(1)); // Output: 1
+lruCache.put(3, 3); // Evicts key 2
+console.log(lruCache.get(2)); // Output: -1 (not found)
+lruCache.put(4, 4); // Evicts key 1
+console.log(lruCache.get(1)); // Output: -1 (not found)
+console.log(lruCache.get(3)); // Output: 3
+console.log(lruCache.get(4)); // Output: 4

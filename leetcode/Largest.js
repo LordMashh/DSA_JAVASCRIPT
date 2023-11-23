@@ -1,7 +1,7 @@
 /* The first line of input contains the positive integers N and K, separated by a space.
 The next lines contain N numbers of positive integers, A[], which denotes the room number available to be used.
 OUTPUT
-Print the largest minimum distance that can be maintained between the rooms.
+k
 
 CONSTRAINTS
 2 <=N<=10^5
